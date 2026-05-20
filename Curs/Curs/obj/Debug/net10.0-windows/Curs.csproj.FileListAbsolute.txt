@@ -1,0 +1,17 @@
+C:\Users\Computer\source\repos\Curs\Curs\bin\Debug\net10.0-windows\Curs.exe
+C:\Users\Computer\source\repos\Curs\Curs\bin\Debug\net10.0-windows\Curs.deps.json
+C:\Users\Computer\source\repos\Curs\Curs\bin\Debug\net10.0-windows\Curs.runtimeconfig.json
+C:\Users\Computer\source\repos\Curs\Curs\bin\Debug\net10.0-windows\Curs.dll
+C:\Users\Computer\source\repos\Curs\Curs\bin\Debug\net10.0-windows\Curs.pdb
+C:\Users\Computer\source\repos\Curs\Curs\obj\Debug\net10.0-windows\Curs.Form1.resources
+C:\Users\Computer\source\repos\Curs\Curs\obj\Debug\net10.0-windows\Curs.csproj.GenerateResource.cache
+C:\Users\Computer\source\repos\Curs\Curs\obj\Debug\net10.0-windows\Curs.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Computer\source\repos\Curs\Curs\obj\Debug\net10.0-windows\Curs.AssemblyInfoInputs.cache
+C:\Users\Computer\source\repos\Curs\Curs\obj\Debug\net10.0-windows\Curs.AssemblyInfo.cs
+C:\Users\Computer\source\repos\Curs\Curs\obj\Debug\net10.0-windows\Curs.csproj.CoreCompileInputs.cache
+C:\Users\Computer\source\repos\Curs\Curs\obj\Debug\net10.0-windows\Curs.dll
+C:\Users\Computer\source\repos\Curs\Curs\obj\Debug\net10.0-windows\refint\Curs.dll
+C:\Users\Computer\source\repos\Curs\Curs\obj\Debug\net10.0-windows\Curs.pdb
+C:\Users\Computer\source\repos\Curs\Curs\obj\Debug\net10.0-windows\Curs.genruntimeconfig.cache
+C:\Users\Computer\source\repos\Curs\Curs\obj\Debug\net10.0-windows\ref\Curs.dll
+C:\Users\Computer\source\repos\Curs\Curs\obj\Debug\net10.0-windows\Curs.AddVehicleForm.resources
