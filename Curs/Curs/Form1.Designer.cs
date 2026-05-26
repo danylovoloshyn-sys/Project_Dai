@@ -52,6 +52,7 @@
             txtBrand = new TextBox();
             label1 = new Label();
             panelRight = new Panel();
+            btnFine = new Button();
             groupBox2 = new GroupBox();
             txtInfoYear = new TextBox();
             txtInfoColor = new TextBox();
@@ -318,12 +319,23 @@
             // panelRight
             // 
             panelRight.BackColor = Color.WhiteSmoke;
+            panelRight.Controls.Add(btnFine);
             panelRight.Controls.Add(groupBox2);
             panelRight.Dock = DockStyle.Right;
             panelRight.Location = new Point(900, 0);
             panelRight.Name = "panelRight";
             panelRight.Size = new Size(300, 640);
             panelRight.TabIndex = 3;
+            // 
+            // btnFine
+            // 
+            btnFine.Location = new Point(35, 327);
+            btnFine.Name = "btnFine";
+            btnFine.Size = new Size(173, 35);
+            btnFine.TabIndex = 1;
+            btnFine.Text = "Виписати штраф";
+            btnFine.UseVisualStyleBackColor = true;
+            btnFine.Click += btnFine_Click;
             // 
             // groupBox2
             // 
@@ -576,5 +588,6 @@
         private Label label9;
         private Label label11;
         private Label label10;
+        private Button btnFine;
     }
 }

@@ -18,8 +18,7 @@ namespace Curs
 
         private void SaveData()
         {
-            string json =
-                JsonSerializer.Serialize(vehicles);
+            string json = JsonSerializer.Serialize(vehicles);
 
             File.WriteAllText("vehicles.json", json);
         }
@@ -28,11 +27,9 @@ namespace Curs
         {
             if (File.Exists("vehicles.json"))
             {
-                string json =
-                    File.ReadAllText("vehicles.json");
+                string json = File.ReadAllText("vehicles.json");
 
-                vehicles =
-                    JsonSerializer.Deserialize<List<Vehicle>>(json);
+                vehicles = JsonSerializer.Deserialize<List<Vehicle>>(json);
 
                 dgvVehicles.Rows.Clear();
 
@@ -65,7 +62,87 @@ namespace Curs
                 );
             }
         }
+        public class VehicleCollection
+        {
+            // Колекція транспортних засобів
+            public List<Vehicle> Vehicles { get; set; }
 
+            // Конструктор
+            public VehicleCollection()
+            {
+                Vehicles = new List<Vehicle>();
+            }
+
+            // Додавання транспортного засобу
+            public void AddVehicle(Vehicle vehicle)
+            {
+                Vehicles.Add(vehicle);
+            }
+
+            // Видалення транспортного засобу
+            public void RemoveVehicle(Vehicle vehicle)
+            {
+                Vehicles.Remove(vehicle);
+            }
+
+            // Пошук за держ. номером
+            public Vehicle FindByPlateNumber(string plate)
+            {
+                foreach (Vehicle vehicle in Vehicles)
+                {
+                    if (vehicle.PlateNumber == plate)
+                    {
+                        return vehicle;
+                    }
+                }
+
+                return null;
+            }
+
+            // Пошук за маркою
+            public List<Vehicle> FindByBrand(string brand)
+            {
+                List<Vehicle> result =
+                    new List<Vehicle>();
+
+                foreach (Vehicle vehicle in Vehicles)
+                {
+                    if (vehicle.Brand.ToLower()
+                        .Contains(brand.ToLower()))
+                    {
+                        result.Add(vehicle);
+                    }
+                }
+
+                return result;
+            }
+
+            // Кількість транспортних засобів
+            public int GetVehicleCount()
+            {
+                return Vehicles.Count;
+            }
+
+            // Список прострочених техоглядів
+            public List<Vehicle> GetExpiredInspections()
+            {
+                List<Vehicle> expiredVehicles =
+                    new List<Vehicle>();
+
+                foreach (Vehicle vehicle in Vehicles)
+                {
+                    DateTime nextInspection =
+                        vehicle.LastInspection.AddYears(1);
+
+                    if (nextInspection < DateTime.Now)
+                    {
+                        expiredVehicles.Add(vehicle);
+                    }
+                }
+
+                return expiredVehicles;
+            }
+        }
         private void btnStats_Click(object sender, EventArgs e)
         {
             int total = vehicles.Count;
@@ -102,7 +179,7 @@ namespace Curs
                 vehicles.Add(form.Vehicle);
                 RefreshTable();
                 SaveData();
-            
+
             }
         }
 
@@ -117,13 +194,13 @@ namespace Curs
                 AddVehicleForm form = new AddVehicleForm(selectedVehicle);
 
                 if (form.ShowDialog() == DialogResult.OK)
-{
-    vehicles[index] = form.Vehicle;
+                {
+                    vehicles[index] = form.Vehicle;
 
-    RefreshTable();
+                    RefreshTable();
 
-    SaveData();
-}
+                    SaveData();
+                }
             }
             else
             {
@@ -153,12 +230,28 @@ namespace Curs
         {
             if (dgvVehicles.SelectedRows.Count > 0)
             {
-                int index = dgvVehicles.SelectedRows[0].Index;
+                string plate =
+                    dgvVehicles.SelectedRows[0].Cells[0].Value.ToString();
 
-                vehicles.RemoveAt(index);
-                SaveData();
-                RefreshTable();
-                dgvVehicles.Rows.RemoveAt(index);
+                Vehicle vehicleToRemove = null;
+
+                foreach (Vehicle vehicle in vehicles)
+                {
+                    if (vehicle.PlateNumber == plate)
+                    {
+                        vehicleToRemove = vehicle;
+                        break;
+                    }
+                }
+
+                if (vehicleToRemove != null)
+                {
+                    vehicles.Remove(vehicleToRemove);
+
+                    SaveData();
+
+                    RefreshTable();
+                }
             }
             else
             {
@@ -308,15 +401,17 @@ namespace Curs
 
             int expiredCount = 0;
 
+            string text = "";
+
             foreach (Vehicle vehicle in vehicles)
             {
                 DateTime nextInspection =
                     vehicle.LastInspection.AddYears(1);
 
-                // Прострочений
+                // Прострочений техогляд
                 bool expired = nextInspection < today;
 
-                // Менше 30 днів
+                // Менше 30 днів до техогляду
                 bool soon =
                     (nextInspection - today).TotalDays <= 30 &&
                     (nextInspection - today).TotalDays >= 0;
@@ -331,16 +426,26 @@ namespace Curs
                         vehicle.LastInspection.ToShortDateString(),
                         vehicle.OwnerName
                     );
+
                     MessageBox.Show(
-    "Власнику " + vehicle.OwnerName +
-    " необхідно пройти техогляд.\n\n" +
-    "Транспортний засіб: " +
-    vehicle.Brand +
-    " (" + vehicle.PlateNumber + ")",
-    "Запрошення на техогляд",
-    MessageBoxButtons.OK,
-    MessageBoxIcon.Warning
-);
+                        "Власнику " + vehicle.OwnerName +
+                        " необхідно пройти техогляд.\n\n" +
+                        "Транспортний засіб: " +
+                        vehicle.Brand +
+                        " (" + vehicle.PlateNumber + ")",
+                        "Запрошення на техогляд",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning
+                    );
+
+                    text +=
+                        "Запрошення на техогляд\n" +
+                        "Власник: " + vehicle.OwnerName + "\n" +
+                        "Авто: " + vehicle.Brand + "\n" +
+                        "Держ. номер: " + vehicle.PlateNumber + "\n" +
+                        "Дата наступного техогляду: " +
+                        nextInspection.ToShortDateString() +
+                        "\n\n";
                 }
 
                 if (expired)
@@ -349,12 +454,17 @@ namespace Curs
                 }
             }
 
+            File.WriteAllText(
+                "inspection_invites.txt",
+                text
+            );
+
             MessageBox.Show(
-    "Прострочених техоглядів: " + expiredCount,
-    "Статистика техогляду",
-    MessageBoxButtons.OK,
-    MessageBoxIcon.Warning
-);
+                "Прострочених техоглядів: " + expiredCount,
+                "Статистика техогляду",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning
+            );
 
             MessageBox.Show(
                 "Показані транспортні засоби, що потребують техогляду.",
@@ -362,6 +472,34 @@ namespace Curs
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Information
             );
+        }
+
+        private void btnFine_Click(object sender, EventArgs e)
+        {
+            if (dgvVehicles.SelectedRows.Count > 0)
+            {
+                int index =
+                    dgvVehicles.SelectedRows[0].Index;
+
+                Vehicle vehicle =
+                    vehicles[index];
+
+                FineForm form =
+                    new FineForm();
+
+                form.SetVehicleData(vehicle);
+
+                form.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show(
+                    "Оберіть транспортний засіб!",
+                    "Помилка",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
+            }
         }
     }
 }
